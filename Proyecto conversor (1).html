@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambios Vinotinto</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: rgba(255, 255, 255, 0.8);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: 140px;
+        }
+
+        .contenedor-principal {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            position: relative;
+        }
+
+        .logo-principal {
+            width: 250px;
+            display: block;
+            margin: 0 auto 20px;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: latido 2s infinite;
+        }
+
+        @keyframes latido {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .banderas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 10px;
+        }
+
+        .bandera {
+            width: 80px;
+            height: 50px;
+            border: 2px solid #800020;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .contenedor {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .grupo-conversion {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+        }
+
+        #paso3 .grupo-conversion {
+            padding: 10px 15px;
+            margin-top: 65px;
+        }
+
+        .input-conversion {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #800020;
+            border-radius: 8px;
+            background: white;
+            color: #800020;
+            font-size: 1rem;
+        }
+
+        .tasa-info {
+            color: #800020;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .paso { display: none; }
+        .paso.activo { display: block; }
+
+        .selector-banco {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #800020;
+            color: #800020;
+            border-radius: 8px;
+        }
+
+        .boton-continuar {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: #800020;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .boton-continuar:hover {
+            background: #5a0017;
+        }
+
+        .input-archivo {
+            width: 100%;
+            padding: 20px 15px;
+            border: 2px dashed #800020;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            cursor: pointer;
+            color: #800020;
+        }
+
+        .preview-captura {
+            max-width: 200px;
+            margin: 15px auto;
+            display: block;
+            border-radius: 8px;
+            border: 2px solid #800020;
+        }
+
+        #actualizando-tasa {
+            font-size: 0.8rem;
+            color: #b3597a;
+            text-align: center;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        ::placeholder {
+            color: #b3597a;
+            opacity: 1;
+        }
+
+        .spinner {
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top: 3px solid #800020;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://i.ibb.co/DPpGg1HJ/Photoroom-20250123-190034.png" 
+         alt="Cambios Vinotinto" 
+         class="logo-principal">
+
+    <div class="contenedor-principal">
+        <div class="banderas">
+            <img src="https://flagcdn.com/w160/co.png" alt="Colombia" class="bandera">
+            <img src="https://flagcdn.com/w160/ve.png" alt="Venezuela" class="bandera">
+        </div>
+
+        <div class="contenedor">
+            <!-- Paso 1 - Conversión -->
+            <div class="paso activo" id="paso1">
+                <div class="grupo-conversion">
+                    <input type="number" 
+                           class="input-conversion" 
+                           id="pesos" 
+                           placeholder="Ingrese COP"
+                           autofocus>
+                    
+                    <div class="tasa-info">
+                        💵 Tasa dólar paralelo: 
+                        <span id="tasa-actual">38.50</span>
+                        <span id="spinner-tasa" class="spinner" style="display: none;"></span>
+                    </div>
+                    <div id="actualizando-tasa">Cargando tasa en vivo...</div>
+                    
+                    <input type="text" 
+                           class="input-conversion resultado" 
+                           id="bolivares" 
+                           placeholder="Total VES" 
+                           readonly>
+                </div>
+                <button class="boton-continuar" onclick="validarPaso1()">Continuar</button>
+            </div>
+
+            <!-- Paso 2 - Datos de pago -->
+            <div class="paso" id="paso2">
+                <div class="grupo-conversion">
+                    <input type="number" 
+                           class="input-conversion" 
+                           placeholder="Número de pago móvil"
+                           id="pago-movil">
+                    
+                    <input type="number" 
+                           class="input-conversion" 
+                           placeholder="Cédula"
+                           id="cedula">
+                    
+                    <select class="selector-banco" id="banco">
+                        <option value="">Seleccione un banco</option>
+                        <option>0102-Venezuela</option>
+                        <option>Banesco</option>
+                        <option>0105-Mercantil</option>
+                        <option>0601-I.M.C.P</option>
+                        <option>0178-N58 banco Digital</option>
+                        <option>0138-Plaza</option>
+                        <option>0108-Provincial</option>
+                        <option>0169-R4</option>
+                        <option>0137-Sofitaza</option>
+                        <option>0163-Tesoro</option>
+                        <option>BBVA Provincial</option>
+                    </select>
+                </div>
+                <button class="boton-continuar" onclick="validarPaso2()">Continuar</button>
+            </div>
+
+            <!-- Paso 3 - Enviar captura -->
+            <div class="paso" id="paso3">
+                <div class="grupo-conversion">
+                    <label class="input-archivo">
+                        📤 Toca para subir captura
+                        <input type="file" 
+                               id="captura"
+                               accept="image/*" 
+                               hidden
+                               onchange="mostrarPrevisualizacion(event)">
+                    </label>
+                    <img id="preview" class="preview-captura">
+                </div>
+                <button class="boton-continuar" onclick="finalizarTransaccion()">Finalizar Transacción</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Configuración
+        let tasaDolar = 38.50;
+        const COMISION = 1; // 1 USD oculto
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const targetUrl = 'https://monitordolarvenezuela.com/';
+
+        // 2. Obtener tasa en vivo
+        async function obtenerTasaEnVivo() {
+            try {
+                document.getElementById('spinner-tasa').style.display = 'inline-block';
+                document.getElementById('actualizando-tasa').textContent = "Actualizando...";
+                
+                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+                const html = await response.text();
+                
+                // Extrae el valor del dólar paralelo
+                const regex = /Dólar paralelo[^>]*>([^<]+)/i;
+                const match = html.match(regex);
+                
+                if (match && match[1]) {
+                    tasaDolar = parseFloat(
+                        match[1].replace(',', '.')
+                               .replace(/[^\d.]/g, '')
+                               .trim()
+                    );
+                    actualizarUI();
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('actualizando-tasa').textContent = "Error. Usando última tasa.";
+            } finally {
+                document.getElementById('spinner-tasa').style.display = 'none';
+            }
+        }
+
+        // 3. Actualizar interfaz
+        function actualizarUI() {
+            document.getElementById('tasa-actual').textContent = tasaDolar.toFixed(2);
+            document.getElementById('actualizando-tasa').textContent = `Actualizado: ${new Date().toLocaleTimeString()}`;
+            calcularConversion();
+        }
+
+        // 4. Calcular conversión (con comisión oculta)
+        function calcularConversion() {
+            const pesos = parseFloat(document.getElementById('pesos').value) || 0;
+            const dolares = (pesos * 0.00022) - COMISION;
+            const bolivares = Math.max(0, dolares * tasaDolar).toFixed(2);
+            document.getElementById('bolivares').value = bolivares + " VES";
+        }
+
+        // 5. Validación de pasos
+        function validarPaso1() {
+            const pesos = document.getElementById('pesos').value;
+            if (!pesos || isNaN(pesos) || parseFloat(pesos) <= 0) {
+                alert('Ingrese un monto válido en COP');
+                return;
+            }
+            mostrarPaso(2);
+        }
+
+        function validarPaso2() {
+            if (!document.getElementById('pago-movil').value || 
+                !document.getElementById('cedula').value || 
+                !document.getElementById('banco').value) {
+                alert('Complete todos los campos');
+                return;
+            }
+            mostrarPaso(3);
+        }
+
+        function mostrarPaso(numeroPaso) {
+            document.querySelectorAll('.paso').forEach(paso => {
+                paso.classList.remove('activo');
+            });
+            document.getElementById(`paso${numeroPaso}`).classList.add('activo');
+        }
+
+        // 6. Funciones adicionales
+        function mostrarPrevisualizacion(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('preview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function finalizarTransaccion() {
+            if (!document.getElementById('captura').files[0]) {
+                alert('Suba una captura del pago');
+                return;
+            }
+            
+            alert('Transacción completada exitosamente!');
+            mostrarPaso(1);
+            // Resetear formulario
+            document.getElementById('pesos').value = '';
+            document.getElementById('bolivares').value = '';
+            document.getElementById('pago-movil').value = '';
+            document.getElementById('cedula').value = '';
+            document.getElementById('banco').value = '';
+            document.getElementById('captura').value = '';
+            document.getElementById('preview').style.display = 'none';
+        }
+
+        // 7. Inicialización
+        document.getElementById('pesos').addEventListener('input', calcularConversion);
+        obtenerTasaEnVivo();
+        setInterval(obtenerTasaEnVivo, 300000); // Actualizar cada 5 minutos
+    </script>
+</body>
+</html>

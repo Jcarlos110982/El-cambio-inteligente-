@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldCoin Exchange</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 200px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #800020;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5a0017;
+        }
+
+        .radio-group {
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .nav-icons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-icon {
+            text-align: center;
+            cursor: pointer;
+            color: #800020;
+            font-size: 12px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active-page {
+            display: block;
+        }
+
+        .qr-code {
+            width: 200px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #800020;
+        }
+
+        .currency-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #800020;
+            margin: 5px 0;
+        }
+
+        .metodo-pago-container {
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .tasa-actual {
+            text-align: center;
+            margin: 10px 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Página 1 - Diseño Original -->
+        <div id="page1" class="page active-page">
+            <div class="logo">
+                <img src="https://i.ibb.co/DPpGg1HJ/Photoroom-20250123-190034.png" alt="Logo">
+            </div>
+            
+            <div class="card">
+                <h2 style="color: #800020;">Bienvenido</h2>
+                
+                <div class="tasa-actual" id="tasaEnPesos">
+                    <i class="fas fa-sync fa-spin"></i> Actualizando tasa...
+                </div>
+
+                <div class="currency-label">
+                    <i class="fas fa-coins"></i>
+                    <span>Monedas a retirar (WLD)</span>
+                </div>
+                <div class="input-icon">
+                    <input type="number" id="monedas" placeholder="Cantidad">
+                    <i class="fas fa-coins" style="color: #800020;"></i>
+                </div>
+
+                <div class="currency-label">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Dinero a recibir (COP)</span>
+                </div>
+                <div class="input-icon">
+                    <input type="text" id="pesos" placeholder="En pesos" readonly>
+                    <i class="fas fa-peso-sign"></i>
+                </div>
+
+                <div class="metodo-pago-container">
+                    <details>
+                        <summary>Método de pago ▼</summary>
+                        <div class="radio-group">
+                            <!-- Cambiado a selector de bancos -->
+                            <select id="banco" style="margin-top: 10px;">
+                                <option value="nequi">Nequi</option>
+                                <option value="daviplata">Daviplata</option>
+                                <option value="bancolombia">Bancolombia</option>
+                                <option value="bbva">BBVA</option>
+                                <option value="davivienda">Davivienda</option>
+                                <option value="llaves">Con llaves</option>
+                            </select>
+                        </div>
+                    </details>
+                </div>
+
+                <button onclick="showPage(2)">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Página 2 -->
+        <div id="page2" class="page">
+            <div class="card">
+                <h2 style="color: #800020;">Información requerida</h2>
+                <input type="text" placeholder="Nombre completo" id="nombre">
+                <input type="number" placeholder="Cédula" id="cedula">
+                <input type="text" placeholder="Tipo de cuenta" id="tipoCuenta">
+                <input type="text" placeholder="Número de cuenta o Llave" id="numero">
+                <button onclick="showPage(3)">Pagar</button>
+            </div>
+        </div>
+
+        <!-- Página 3 -->
+        <div id="page3" class="page">
+            <div class="card">
+                <h2 style="color: #800020;">Escanea el QR</h2>
+                <img src="https://quickchart.io/qr?text=0xad650485936f701f232d072e28c245b53207ed98&size=200" 
+                     alt="QR" 
+                     class="qr-code">
+                <p style="color: #800020; word-break: break-all; cursor: pointer;" onclick="copyAddress()">
+                    0xad650485936f701f232d072e28c245b53207ed98
+                    <br><small>(Click para copiar)</small>
+                </p>
+                <button onclick="finalizar()">Finalizar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegación Inferior -->
+    <div class="nav-icons">
+        <div class="nav-icon" onclick="showPage(1)">
+            <i class="fas fa-home"></i><br>Inicio
+        </div>
+        <div class="nav-icon">
+            <i class="fas fa-history"></i><br>Historial
+        </div>
+        <div class="nav-icon" onclick="window.open('https://wa.me/573236062784')">
+            <i class="fab fa-whatsapp"></i><br>Soporte
+        </div>
+        <div class="nav-icon" onclick="alert('1. Ingrese cantidad\n2. Seleccione método\n3. Complete datos\n4. Realice pago')">
+            <i class="fas fa-question-circle"></i><br>Ayuda
+        </div>
+    </div>
+
+    <script>
+        // Configuración
+        const COMISION = 0.20; // 20% de comisión (cambio aquí)
+
+        // Variables globales
+        let tasaActual = 0;
+
+        // Obtener tasa en tiempo real
+        async function actualizarTasa() {
+            try {
+                // Obtener precio de Binance
+                const respuesta = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=WLDUSDT');
+                const datos = await respuesta.json();
+                const precioUSDT = parseFloat(datos.price);
+
+                // Obtener tasa USD a COP
+                const respuestaCOP = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                const datosCOP = await respuestaCOP.json();
+                const tasaUSDCOP = datosCOP.rates.COP;
+
+                // Calcular tasa real con comisión (aquí aplicamos el 20% de descuento)
+                tasaActual = (precioUSDT * tasaUSDCOP) * (1 - COMISION);
+
+                // Actualizar display (mostramos la tasa sin el descuento)
+                document.getElementById('tasaEnPesos').innerHTML = `
+                    1 WLD = ${(precioUSDT * tasaUSDCOP).toLocaleString('es-CO', {
+                        style: 'currency',
+                        currency: 'COP',
+                        minimumFractionDigits: 0
+                    })}
+                `;
+
+            } catch (error) {
+                document.getElementById('tasaEnPesos').innerHTML = '⚠️ Error actualizando tasa';
+            }
+        }
+
+        // Calcular en tiempo real (aquí aplicamos el descuento del 20%)
+        document.getElementById('monedas').addEventListener('input', function(e) {
+            const cantidad = e.target.value;
+            const total = cantidad * tasaActual; // Aquí ya está aplicado el descuento
+            document.getElementById('pesos').value = total.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0
+            });
+        });
+
+        // Navegación
+        function showPage(pageNumber) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(`page${pageNumber}`).classList.add('active-page');
+        }
+
+        // Finalizar transacción
+        function finalizar() {
+            localStorage.setItem('transaccion', JSON.stringify({
+                nombre: document.getElementById('nombre').value,
+                monto: document.getElementById('monedas').value,
+                fecha: new Date().toLocaleString(),
+                banco: document.getElementById('banco').value
+            }));
+            showPage(1);
+            alert('Transacción completada exitosamente');
+        }
+
+        // Copiar dirección
+        function copyAddress() {
+            navigator.clipboard.writeText('0xad650485936f701f232d072e28c245b53207ed98');
+            alert('Dirección copiada al portapapeles');
+        }
+
+        // Iniciar
+        actualizarTasa();
+        setInterval(actualizarTasa, 10000); // Actualizar cada 10 segundos
+    </script>
+</body>
+</html>

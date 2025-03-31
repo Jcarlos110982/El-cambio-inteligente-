@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinotinto Transfer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                        url('https://i.ibb.co/FqV5mfZN/Ai-Art-1742956595304.jpg') center/cover fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animación de Bienvenida */
+        .welcome-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: textScale 6s forwards;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .welcome-text {
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            line-height: 1.4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Contenedor de Opciones */
+        .options-container {
+            opacity: 0;
+            visibility: hidden;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 50px;
+            text-align: center;
+            transition: all 0.5s ease;
+            transform: translateY(20px);
+        }
+
+        .show-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .options-title {
+            color: #ffffff;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Menú Desplegable */
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-btn {
+            width: 100%;
+            padding: 15px;
+            background: #800020;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dropdown-btn:hover {
+            background: #680019;
+        }
+
+        .dropdown-content {
+            max-height: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: max-height 0.3s ease-out;
+        }
+
+        .dropdown-active {
+            max-height: 200px;
+        }
+
+        .dropdown-item {
+            padding: 15px;
+            color: #800020;
+            font-size: 1rem;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f8d7da;
+        }
+
+        /* Contenedores para las aplicaciones */
+        .app-container {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #800020;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Animaciones */
+        @keyframes textScale {
+            0% { opacity: 0; transform: scale(0); }
+            20% { opacity: 1; transform: scale(1); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); visibility: hidden; }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-text {
+                font-size: 1.8rem;
+            }
+            
+            .options-title {
+                font-size: 1.5rem;
+            }
+            
+            .dropdown-btn {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Bienvenida -->
+    <div class="welcome-container">
+        <h1 class="welcome-text">Bienvenido,<br>¿Qué quieres hacer hoy?</h1>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="options-container">
+        <h2 class="options-title">Escoge una opción</h2>
+        
+        <div class="dropdown">
+            <button class="dropdown-btn" onclick="toggleMenu()">
+                Mostrar Opciones ▼
+            </button>
+            
+            <div class="dropdown-content" id="dropdownMenu">
+                <div class="dropdown-item" onclick="openApp('wld')">
+                    Comprar WLD
+                </div>
+                <div class="dropdown-item" onclick="openApp('venezuela')">
+                    Enviar dinero a Venezuela
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedores para las aplicaciones -->
+    <div id="wld-app" class="app-container">
+        <button class="close-btn" onclick="closeApp('wld')">×</button>
+        <iframe src="Aplicación%20única%20.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+
+    <div id="venezuela-app" class="app-container">
+        <button class="close-btn" onclick="closeApp('venezuela')">×</button>
+        <iframe src="Proyecto%20conversor%20(1).html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFrTeO9BCBGzehhy9sdMb1NfzqJahycbQ",
+            authDomain: "cambios-2.firebaseapp.com",
+            projectId: "cambios-2",
+            storageBucket: "cambios-2.appspot.com",
+            messagingSenderId: "222288814637",
+            appId: "1:222288814637:web:b41b4d42f5edb623244ea4"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Control de la animación inicial
+        setTimeout(() => {
+            document.querySelector('.welcome-container').remove();
+            document.querySelector('.options-container').classList.add('show-options');
+        }, 6000);
+
+        // Control del menú desplegable
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('dropdown-active');
+        }
+
+        // Abrir aplicaciones
+        function openApp(appName) {
+            document.getElementById(`${appName}-app`).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Cerrar aplicaciones
+        function closeApp(appName) {
+            document.getElementById(`${appName}-app`).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar menú al hacer click fuera
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('dropdownMenu');
+            if (!e.target.closest('.dropdown')) {
+                menu.classList.remove('dropdown-active');
+            }
+        });
+    </script>
+</body>
+</html>
